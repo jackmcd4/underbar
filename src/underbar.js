@@ -94,15 +94,35 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-  };
+    var newArr=[];
+    for(var i=0; i<array.length; i++){
+      if(_.indexOf(newArr, array[i])==-1){
+        newArr.push(array[i]);
+      }
+    }
+    return newArr;
+    };
+    /* first attempt, before realizing the need of a new array
+    for(var i=0; i<array.length; i++){
+      for(var j=i+1; j<array.length; j++){
+        if(array[i]==array[j]){
+          array.splice(j, 1)
+        }
+      }
+    }
+    return array;
+  };*/
 
 
   // Return the results of applying an iterator to each element.
-  _.map = function(collection, iterator) {
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
-  };
+  _.map = function(collection, iterator) {
+    var arr = [];
+    _.each(collection, function(num){arr.push(iterator(num))})
+    return arr;
+}
 
   /*
    * TIP: map is really handy when you want to transform an array of
@@ -143,6 +163,16 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if(accumulator===undefined){accumulator=collection[0];
+    for(var i=1; i<collection.length; i++){
+      accumulator = iterator(accumulator, collection[i])
+    }}
+    else{
+      for(var i=0; i<collection.length; i++){
+        accumulator = iterator(accumulator, collection[i])
+      }
+    }
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
