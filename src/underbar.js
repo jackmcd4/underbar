@@ -321,8 +321,9 @@ _.some = function(collection, iterator){
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait, a, b) {
-    setTimeout(func, wait, a, b);
+  _.delay = function(func, wait) {
+    var arg=[].slice.call(arguments, 2);
+    setTimeout(function(){return func.apply(this, arg);}, wait);
   };
 
 
@@ -337,16 +338,16 @@ _.some = function(collection, iterator){
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    var newArr = array.slice(0, array.length);
+    var newArr = array.slice();
     var hold;
     for(var i=0; i<array.length; i++){
-      var rand=(Math.random()*array.length-1)
+      var rand=Math.ceil(Math.random()*array.length-1)
       hold = newArr[i];
-      newArr[i]=newArr[Math.ceil(rand)];
-      newArr[Math.ceil(rand)]=hold;
+      newArr[i]=newArr[rand];
+      newArr[rand]=hold;
     }
-    if(newArr===array){
-      _.shuffle(array)
+    if(newArr.toString()===array.toString()){
+     return _.shuffle(array)
     }
     return newArr;
   };
