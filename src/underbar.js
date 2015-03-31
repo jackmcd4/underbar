@@ -302,17 +302,18 @@ _.some = function(collection, iterator){
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    var alreadyCalled=false;
-    var result;
-    var arg = arguments
-    return function(){
-      if(!alreadyCalled && arg!=arguments){
-        result = func.apply(this, arguments);
-        alreadyCalled=true;
-      }
-      return result;
+    var hashFunc={}
+    return function(){ 
+        var args = [].slice.call(arguments).toString();
+        if(_.contains(hashFunc, hashFunc[args])){
+             return hashFunc[args];
+        }
+        else{
+          hashFunc[args]=func.apply(this, arguments);
+          return hashFunc[args];
+        }
     }
-  };
+};
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -345,7 +346,7 @@ _.some = function(collection, iterator){
       newArr[Math.ceil(rand)]=hold;
     }
     if(newArr===array){
-      return _.shuffle(array)
+      _.shuffle(array)
     }
     return newArr;
   };
