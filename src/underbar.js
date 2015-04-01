@@ -413,6 +413,24 @@ _.some = function(collection, iterator){
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    result=[];
+    for(var i=0; i<nestedArray.length; i++){
+        if(Array.isArray(nestedArray[i])){
+            for(var j=0; j<nestedArray[i].length; j++){
+                result.push(nestedArray[i][j])
+            }
+        }
+        else{
+            result.push(nestedArray[i]);
+        }
+    }
+    for(var i=0; i<result.length; i++){
+        if(Array.isArray(result[i])){
+            nestedArray=result;
+            return _.flatten(nestedArray, result)
+        }
+    }
+    return result;
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
@@ -461,5 +479,7 @@ _.some = function(collection, iterator){
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+    func();
+    setTimeout(func, wait);
   };
 }());
