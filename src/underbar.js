@@ -364,6 +364,17 @@ _.some = function(collection, iterator){
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+      if(typeof(functionOrKey)==='string'){
+       for(var i=0; i<collection.length; i++){
+          collection[i]=collection[i][functionOrKey]();
+        }
+      }
+        else{
+            for(var i=0; i<collection.length; i++){
+            collection[i]=functionOrKey.apply(collection[i], collection)
+            }
+        }
+    return collection;
   };
 
   // Sort the object's values by a criterion produced by an iterator.
@@ -378,8 +389,24 @@ _.some = function(collection, iterator){
   //
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
-  _.zip = function() {
-  };
+  _.zip = function(){
+      var longest=[];
+      var newArr=[];
+      var holdArr=[];
+      for(var i=0; i<arguments.length; i++){
+          if(arguments[i].length>longest.length){
+              longest=arguments[i];
+          }
+      }
+      for(var i=0; i<longest.length; i++){
+          holdArr=[];
+          for(var j=0; j<arguments.length; j++){
+              holdArr.push(arguments[j][i])
+          }
+          newArr[i]=holdArr;
+      }
+      return newArr;
+  }
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
   // The new array should contain all elements of the multidimensional array.
@@ -391,11 +418,41 @@ _.some = function(collection, iterator){
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
-  };
+     var newArr=[];
+      for(var i=0; i<arguments.length; i++){
+      //loops through however many arrays in arguments
+        for(var j=0; j<arguments[i].length; j++){
+            var hold=[];
+        //loops through props in arrays in arguments
+            for(var k=i+1; k<arguments.length; k++){
+            //loops through the other arrays w/contains
+                if(_.contains(newArr, arguments[i][j])){
+                    continue;
+                }
+                else if(_.contains(arguments[k], arguments[i][j])){
+                    hold.push(arguments[i][j]);
+                }
+            }
+            if(hold.length===arguments.length-1){
+                    newArr.push(hold[0]);
+                }
+        }
+      }
+      return newArr;
+   }
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
-  _.difference = function(array) {
+  _.difference = function(array){
+      for(var i=0; i<array.length; i++){
+        for(var j=1; j<arguments.length; j++){
+          if(_.contains(arguments[j], array[i])){
+            array.splice(i, 1)
+            i--;
+          }
+        }
+      }
+      return array;
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
